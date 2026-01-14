@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krishi - Smart Agriculture Solutions</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Background Elements -->
+    <div class="grain-overlay"></div>
+    <div class="leaf-pattern"></div>
+    
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <div class="logo-icon">🌾</div>
+                <span class="logo-text">Krishi</span>
+            </div>
+            <nav class="nav">
+                <a href="#crop-prediction" class="nav-link">Crop Prediction</a>
+                <a href="#disease-detection" class="nav-link">Disease Detection</a>
+                <a href="#about" class="nav-link">About</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Smart Farming
+                    <span class="hero-subtitle">Powered by AI</span>
+                </h1>
+                <p class="hero-description">
+                    Harness the power of machine learning to predict optimal crops and detect plant diseases. 
+                    Cultivate smarter, harvest better.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#crop-prediction" class="btn btn-primary">Get Started</a>
+                    <a href="#about" class="btn btn-secondary">Learn More</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="floating-card">
+                    <div class="stat">
+                        <div class="stat-value">95%</div>
+                        <div class="stat-label">Accuracy</div>
+                    </div>
+                </div>
+                <div class="floating-card delay-1">
+                    <div class="stat">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">Crop Types</div>
+                    </div>
+                </div>
+                <div class="floating-card delay-2">
+                    <div class="stat">
+                        <div class="stat-value">AI</div>
+                        <div class="stat-label">Powered</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Crop Prediction Section -->
+    <section id="crop-prediction" class="section crop-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-icon">🌱</div>
+                <h2 class="section-title">Crop Recommendation</h2>
+                <p class="section-description">
+                    Enter your soil and climate parameters to receive AI-powered crop recommendations
+                </p>
+            </div>
+
+            <div class="card main-card">
+                <form id="cropForm" class="form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nitrogen">Nitrogen (N)</label>
+                            <input type="number" id="nitrogen" name="nitrogen" placeholder="e.g., 90" required>
+                            <span class="form-hint">Nitrogen content ratio</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phosphorus">Phosphorus (P)</label>
+                            <input type="number" id="phosphorus" name="phosphorus" placeholder="e.g., 42" required>
+                            <span class="form-hint">Phosphorus content ratio</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="potassium">Potassium (K)</label>
+                            <input type="number" id="potassium" name="potassium" placeholder="e.g., 43" required>
+                            <span class="form-hint">Potassium content ratio</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="temperature">Temperature (°C)</label>
+                            <input type="number" step="0.1" id="temperature" name="temperature" placeholder="e.g., 20.8" required>
+                            <span class="form-hint">Average temperature</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="humidity">Humidity (%)</label>
+                            <input type="number" step="0.1" id="humidity" name="humidity" placeholder="e.g., 82" required>
+                            <span class="form-hint">Relative humidity</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ph">pH Value</label>
+                            <input type="number" step="0.1" id="ph" name="ph" placeholder="e.g., 6.5" required>
+                            <span class="form-hint">Soil pH level</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="rainfall">Rainfall (mm)</label>
+                            <input type="number" step="0.1" id="rainfall" name="rainfall" placeholder="e.g., 202.9" required>
+                            <span class="form-hint">Annual rainfall</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <span>Predict Best Crop</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </form>
+
+                <div id="cropResult" class="result-container" style="display: none;">
+                    <div class="result-icon">✓</div>
+                    <h3 class="result-title">Recommended Crop</h3>
+                    <div id="cropResultText" class="result-text"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Disease Detection Section -->
+    <section id="disease-detection" class="section disease-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-icon">🔬</div>
+                <h2 class="section-title">Disease Detection</h2>
+                <p class="section-description">
+                    Upload a plant leaf image to identify diseases and receive treatment recommendations
+                </p>
+            </div>
+
+            <div class="disease-tabs">
+                <button class="tab-btn active" data-crop="corn">🌽 Corn</button>
+                <button class="tab-btn" data-crop="rice">🌾 Rice</button>
+                <button class="tab-btn" data-crop="wheat">🌾 Wheat</button>
+            </div>
+
+            <div class="card main-card">
+                <form id="diseaseForm" class="form">
+                    <input type="hidden" id="cropType" name="crop_type" value="corn">
+                    
+                    <div class="upload-area" id="uploadArea">
+                        <input type="file" id="leafImage" name="image" accept="image/*" required hidden>
+                        <div class="upload-content">
+                            <div class="upload-icon">📷</div>
+                            <p class="upload-text">Click to upload or drag and drop</p>
+                            <p class="upload-hint">PNG, JPG or JPEG (MAX. 10MB)</p>
+                        </div>
+                        <div id="imagePreview" class="image-preview" style="display: none;">
+                            <img id="previewImg" src="" alt="Preview">
+                            <button type="button" class="remove-image" id="removeImage">×</button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <span>Analyze Disease</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </form>
+
+                <div id="diseaseResult" class="result-container" style="display: none;">
+                    <div class="result-icon">🔍</div>
+                    <h3 class="result-title">Analysis Complete</h3>
+                    <div id="diseaseResultText" class="result-text"></div>
+                    <div id="diseaseConfidence" class="confidence-bar" style="display: none;">
+                        <div class="confidence-label">Confidence: <span id="confidenceValue">0%</span></div>
+                        <div class="progress-bar">
+                            <div id="confidenceProgress" class="progress-fill"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section about-section">
+        <div class="container">
+            <div class="about-content">
+                <h2 class="section-title">About Krishi</h2>
+                <p class="about-text">
+                    Krishi combines traditional agricultural wisdom with cutting-edge artificial intelligence 
+                    to empower farmers with data-driven insights. Our platform uses Random Forest algorithms 
+                    for crop prediction and deep learning models for disease detection, achieving industry-leading 
+                    accuracy rates.
+                </p>
+                <div class="features-grid">
+                    <div class="feature">
+                        <div class="feature-icon">🎯</div>
+                        <h3 class="feature-title">Accurate Predictions</h3>
+                        <p class="feature-text">ML models trained on extensive agricultural datasets</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">⚡</div>
+                        <h3 class="feature-title">Instant Results</h3>
+                        <p class="feature-text">Get recommendations in seconds, not days</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🌍</div>
+                        <h3 class="feature-title">Local & Global</h3>
+                        <p class="feature-text">Adaptable to various climatic conditions</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <div class="logo-icon">🌾</div>
+                        <span class="logo-text">Krishi</span>
+                    </div>
+                    <p class="footer-text">Smart agriculture powered by AI</p>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">Quick Links</h4>
+                    <a href="#crop-prediction" class="footer-link">Crop Prediction</a>
+                    <a href="#disease-detection" class="footer-link">Disease Detection</a>
+                    <a href="#about" class="footer-link">About</a>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">Resources</h4>
+                    <a href="#" class="footer-link">Documentation</a>
+                    <a href="#" class="footer-link">API Access</a>
+                    <a href="#" class="footer-link">Support</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Krishi. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
