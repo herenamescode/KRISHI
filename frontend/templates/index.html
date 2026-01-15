@@ -3,263 +3,773 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Krishi - Smart Agriculture Solutions</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>Krishi - Smart Agriculture</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --bg: #ffffff;
+            --bg-gray: #f9fafb;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+            background: var(--bg);
+        }
+
+        .header {
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav a:hover {
+            color: var(--primary);
+        }
+
+        .hero {
+            padding: 5rem 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            color: var(--text-light);
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        .form-group input {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.875rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-full {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 2rem;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: var(--bg-gray);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .result {
+            background: var(--bg-gray);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .result-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .result-text {
+            font-size: 1.25rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* CHATBOT STYLES */
+        .chatbot-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+            transition: all 0.2s;
+            z-index: 1000;
+        }
+
+        .chatbot-button:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-window {
+            position: fixed;
+            bottom: 100px;
+            right: 2rem;
+            width: 380px;
+            height: 550px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            border: 1px solid var(--border);
+        }
+
+        .chat-header {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header-text {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chat-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            background: var(--bg-gray);
+        }
+
+        .chat-message {
+            margin-bottom: 1rem;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message-bot {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .message-bot .avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .message-bot .text {
+            background: white;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            max-width: 75%;
+            border: 1px solid var(--border);
+        }
+
+        .message-user {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .message-user .text {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            max-width: 75%;
+        }
+
+        .chat-suggestions {
+            padding: 0.5rem 1rem;
+            background: white;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+        }
+
+        .suggestion {
+            padding: 0.5rem 1rem;
+            background: var(--bg-gray);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .suggestion:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .chat-input-area {
+            padding: 1rem;
+            background: white;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .chat-input-area input:focus {
+            border-color: var(--primary);
+        }
+
+        .chat-send {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .chat-window {
+                right: 1rem;
+                left: 1rem;
+                width: auto;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Background Elements -->
-    <div class="grain-overlay"></div>
-    <div class="leaf-pattern"></div>
-    
     <!-- Header -->
     <header class="header">
         <div class="container">
-            <div class="logo">
-                <div class="logo-icon">🌾</div>
-                <span class="logo-text">Krishi</span>
+            <div class="header-content">
+                <div class="logo">🌾 Krishi</div>
+                <nav class="nav">
+                    <a href="#crop">Crop Prediction</a>
+                    <a href="#disease">Disease Detection</a>
+                </nav>
             </div>
-            <nav class="nav">
-                <a href="#crop-prediction" class="nav-link">Crop Prediction</a>
-                <a href="#disease-detection" class="nav-link">Disease Detection</a>
-                <a href="#about" class="nav-link">About</a>
-            </nav>
         </div>
     </header>
 
-    <!-- Hero Section -->
+    <!-- Hero -->
     <section class="hero">
         <div class="container">
-            <div class="hero-content">
-                <h1 class="hero-title">
-                    Smart Farming
-                    <span class="hero-subtitle">Powered by AI</span>
-                </h1>
-                <p class="hero-description">
-                    Harness the power of machine learning to predict optimal crops and detect plant diseases. 
-                    Cultivate smarter, harvest better.
-                </p>
-                <div class="hero-buttons">
-                    <a href="#crop-prediction" class="btn btn-primary">Get Started</a>
-                    <a href="#about" class="btn btn-secondary">Learn More</a>
-                </div>
-            </div>
-            <div class="hero-visual">
-                <div class="floating-card">
-                    <div class="stat">
-                        <div class="stat-value">95%</div>
-                        <div class="stat-label">Accuracy</div>
-                    </div>
-                </div>
-                <div class="floating-card delay-1">
-                    <div class="stat">
-                        <div class="stat-value">3</div>
-                        <div class="stat-label">Crop Types</div>
-                    </div>
-                </div>
-                <div class="floating-card delay-2">
-                    <div class="stat">
-                        <div class="stat-value">AI</div>
-                        <div class="stat-label">Powered</div>
-                    </div>
-                </div>
-            </div>
+            <h1>Smart Farming with AI</h1>
+            <p>Predict optimal crops and detect plant diseases using machine learning</p>
         </div>
     </section>
 
-    <!-- Crop Prediction Section -->
-    <section id="crop-prediction" class="section crop-section">
+    <!-- Crop Prediction -->
+    <section id="crop" class="section" style="background: var(--bg-gray);">
         <div class="container">
-            <div class="section-header">
-                <div class="section-icon">🌱</div>
-                <h2 class="section-title">Crop Recommendation</h2>
-                <p class="section-description">
-                    Enter your soil and climate parameters to receive AI-powered crop recommendations
-                </p>
-            </div>
-
-            <div class="card main-card">
-                <form id="cropForm" class="form">
+            <h2 class="section-title">Crop Recommendation</h2>
+            <p class="section-subtitle">Enter soil and climate parameters</p>
+            
+            <div class="card">
+                <form id="cropForm">
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="nitrogen">Nitrogen (N)</label>
-                            <input type="number" id="nitrogen" name="nitrogen" placeholder="e.g., 90" required>
-                            <span class="form-hint">Nitrogen content ratio</span>
+                            <label>Nitrogen (N)</label>
+                            <input type="number" name="nitrogen" placeholder="90" required>
                         </div>
-
                         <div class="form-group">
-                            <label for="phosphorus">Phosphorus (P)</label>
-                            <input type="number" id="phosphorus" name="phosphorus" placeholder="e.g., 42" required>
-                            <span class="form-hint">Phosphorus content ratio</span>
+                            <label>Phosphorus (P)</label>
+                            <input type="number" name="phosphorus" placeholder="42" required>
                         </div>
-
                         <div class="form-group">
-                            <label for="potassium">Potassium (K)</label>
-                            <input type="number" id="potassium" name="potassium" placeholder="e.g., 43" required>
-                            <span class="form-hint">Potassium content ratio</span>
+                            <label>Potassium (K)</label>
+                            <input type="number" name="potassium" placeholder="43" required>
                         </div>
-
                         <div class="form-group">
-                            <label for="temperature">Temperature (°C)</label>
-                            <input type="number" step="0.1" id="temperature" name="temperature" placeholder="e.g., 20.8" required>
-                            <span class="form-hint">Average temperature</span>
+                            <label>Temperature (°C)</label>
+                            <input type="number" step="0.1" name="temperature" placeholder="20.8" required>
                         </div>
-
                         <div class="form-group">
-                            <label for="humidity">Humidity (%)</label>
-                            <input type="number" step="0.1" id="humidity" name="humidity" placeholder="e.g., 82" required>
-                            <span class="form-hint">Relative humidity</span>
+                            <label>Humidity (%)</label>
+                            <input type="number" step="0.1" name="humidity" placeholder="82" required>
                         </div>
-
                         <div class="form-group">
-                            <label for="ph">pH Value</label>
-                            <input type="number" step="0.1" id="ph" name="ph" placeholder="e.g., 6.5" required>
-                            <span class="form-hint">Soil pH level</span>
+                            <label>pH Value</label>
+                            <input type="number" step="0.1" name="ph" placeholder="6.5" required>
                         </div>
-
                         <div class="form-group">
-                            <label for="rainfall">Rainfall (mm)</label>
-                            <input type="number" step="0.1" id="rainfall" name="rainfall" placeholder="e.g., 202.9" required>
-                            <span class="form-hint">Annual rainfall</span>
+                            <label>Rainfall (mm)</label>
+                            <input type="number" step="0.1" name="rainfall" placeholder="202.9" required>
                         </div>
                     </div>
-
-                    <button type="submit" class="btn btn-primary btn-large">
-                        <span>Predict Best Crop</span>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
+                    <button type="submit" class="btn btn-full">Predict Best Crop →</button>
                 </form>
-
-                <div id="cropResult" class="result-container" style="display: none;">
-                    <div class="result-icon">✓</div>
-                    <h3 class="result-title">Recommended Crop</h3>
+                
+                <div id="cropResult" class="result hidden">
+                    <div class="result-title">Recommended Crop</div>
                     <div id="cropResultText" class="result-text"></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Disease Detection Section -->
-    <section id="disease-detection" class="section disease-section">
+    <!-- Disease Detection -->
+    <section id="disease" class="section">
         <div class="container">
-            <div class="section-header">
-                <div class="section-icon">🔬</div>
-                <h2 class="section-title">Disease Detection</h2>
-                <p class="section-description">
-                    Upload a plant leaf image to identify diseases and receive treatment recommendations
-                </p>
+            <h2 class="section-title">Disease Detection</h2>
+            <p class="section-subtitle">Upload a leaf image to identify diseases</p>
+            
+            <div class="tabs">
+                <button class="tab active" data-crop="corn">🌽 Corn</button>
+                <button class="tab" data-crop="rice">🌾 Rice</button>
+                <button class="tab" data-crop="wheat">🌾 Wheat</button>
             </div>
-
-            <div class="disease-tabs">
-                <button class="tab-btn active" data-crop="corn">🌽 Corn</button>
-                <button class="tab-btn" data-crop="rice">🌾 Rice</button>
-                <button class="tab-btn" data-crop="wheat">🌾 Wheat</button>
-            </div>
-
-            <div class="card main-card">
-                <form id="diseaseForm" class="form">
-                    <input type="hidden" id="cropType" name="crop_type" value="corn">
+            
+            <div class="card">
+                <form id="diseaseForm">
+                    <input type="hidden" id="cropType" value="corn">
+                    <input type="file" id="imageInput" accept="image/*" hidden>
                     
                     <div class="upload-area" id="uploadArea">
-                        <input type="file" id="leafImage" name="image" accept="image/*" required hidden>
-                        <div class="upload-content">
+                        <div id="uploadContent">
                             <div class="upload-icon">📷</div>
-                            <p class="upload-text">Click to upload or drag and drop</p>
-                            <p class="upload-hint">PNG, JPG or JPEG (MAX. 10MB)</p>
+                            <p><strong>Click to upload</strong> or drag and drop</p>
+                            <p style="font-size: 0.875rem; color: var(--text-light); margin-top: 0.5rem;">PNG, JPG (MAX. 10MB)</p>
                         </div>
-                        <div id="imagePreview" class="image-preview" style="display: none;">
-                            <img id="previewImg" src="" alt="Preview">
-                            <button type="button" class="remove-image" id="removeImage">×</button>
+                        <div id="imagePreview" class="hidden">
+                            <img id="previewImg" style="max-width: 100%; max-height: 300px; border-radius: 8px;">
                         </div>
                     </div>
-
-                    <button type="submit" class="btn btn-primary btn-large">
-                        <span>Analyze Disease</span>
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
+                    
+                    <button type="submit" class="btn btn-full">Analyze Disease →</button>
                 </form>
-
-                <div id="diseaseResult" class="result-container" style="display: none;">
-                    <div class="result-icon">🔍</div>
-                    <h3 class="result-title">Analysis Complete</h3>
+                
+                <div id="diseaseResult" class="result hidden">
+                    <div class="result-title">Analysis Complete</div>
                     <div id="diseaseResultText" class="result-text"></div>
-                    <div id="diseaseConfidence" class="confidence-bar" style="display: none;">
-                        <div class="confidence-label">Confidence: <span id="confidenceValue">0%</span></div>
-                        <div class="progress-bar">
-                            <div id="confidenceProgress" class="progress-fill"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chatbot Button -->
+    <button class="chatbot-button" onclick="toggleChat()">💬</button>
+
+    <!-- Chat Window -->
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <div class="chat-header-text">
+                <span>🌾</span>
+                <strong>Krishi Bot</strong>
+            </div>
+            <button class="chat-close" onclick="toggleChat()">×</button>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <!-- Messages will be added here -->
+        </div>
+
+        <div class="chat-suggestions">
+            <button class="suggestion" onclick="sendQuickMessage('How to predict crops?')">🌱 Predict Crops</button>
+            <button class="suggestion" onclick="sendQuickMessage('What is NPK?')">🧪 About NPK</button>
+            <button class="suggestion" onclick="sendQuickMessage('Tell me about rice')">🌾 Rice Info</button>
+        </div>
+
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" placeholder="Ask about farming..." onkeypress="if(event.key==='Enter') sendMessage()">
+            <button class="chat-send" onclick="sendMessage()">➤</button>
+        </div>
+    </div>
+
+    <script src="/static/chatbot.js"></script>
+    <script>
+        // Crop Form
+        document.getElementById('cropForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+            
+            try {
+                const response = await fetch('/predict_crop', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('cropResultText').textContent = result.crop;
+                    document.getElementById('cropResult').classList.remove('hidden');
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Error connecting to server');
+            }
+        });
+
+        // Disease Detection Tabs
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById('cropType').value = tab.dataset.crop;
+            });
+        });
+
+        // Image Upload
+        const uploadArea = document.getElementById('uploadArea');
+        const imageInput = document.getElementById('imageInput');
+        const uploadContent = document.getElementById('uploadContent');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewImg = document.getElementById('previewImg');
+
+        uploadArea.addEventListener('click', () => imageInput.click());
+
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewImg.src = e.target.result;
+                    uploadContent.classList.add('hidden');
+                    imagePreview.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                imageInput.files = e.dataTransfer.files;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewImg.src = e.target.result;
+                    uploadContent.classList.add('hidden');
+                    imagePreview.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Disease Form
+        document.getElementById('diseaseForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            formData.append('image', imageInput.files[0]);
+            formData.append('crop_type', document.getElementById('cropType').value);
+            
+            try {
+                const response = await fetch('/predict_disease', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('diseaseResultText').innerHTML = `
+                        <div style="font-size: 1.5rem;">${result.disease}</div>
+                        <div style="font-size: 0.9rem; color: var(--text-light); margin-top: 0.5rem;">
+                            Confidence: ${(result.confidence * 100).toFixed(1)}%
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+                        <div style="margin-top: 1rem; font-size: 1rem; font-weight: normal; color: var(--text);">
+                            ${result.recommendation}
+                        </div>
+                    `;
+                    document.getElementById('diseaseResult').classList.remove('hidden');
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                alert('Error connecting to server');
+            }
+        });
 
-    <!-- About Section -->
-    <section id="about" class="section about-section">
-        <div class="container">
-            <div class="about-content">
-                <h2 class="section-title">About Krishi</h2>
-                <p class="about-text">
-                    Krishi combines traditional agricultural wisdom with cutting-edge artificial intelligence 
-                    to empower farmers with data-driven insights. Our platform uses Random Forest algorithms 
-                    for crop prediction and deep learning models for disease detection, achieving industry-leading 
-                    accuracy rates.
-                </p>
-                <div class="features-grid">
-                    <div class="feature">
-                        <div class="feature-icon">🎯</div>
-                        <h3 class="feature-title">Accurate Predictions</h3>
-                        <p class="feature-text">ML models trained on extensive agricultural datasets</p>
-                    </div>
-                    <div class="feature">
-                        <div class="feature-icon">⚡</div>
-                        <h3 class="feature-title">Instant Results</h3>
-                        <p class="feature-text">Get recommendations in seconds, not days</p>
-                    </div>
-                    <div class="feature">
-                        <div class="feature-icon">🌍</div>
-                        <h3 class="feature-title">Local & Global</h3>
-                        <p class="feature-text">Adaptable to various climatic conditions</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        // Chatbot Toggle
+        function toggleChat() {
+            const chatWindow = document.getElementById('chatWindow');
+            const isVisible = chatWindow.style.display === 'flex';
+            chatWindow.style.display = isVisible ? 'none' : 'flex';
+            
+            // Add welcome message if first time
+            if (!isVisible && document.getElementById('chatMessages').children.length === 0) {
+                addBotMessage('Hello! 👋 I\'m Krishi Bot. Ask me about crops, diseases, or farming tips!');
+            }
+        }
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <div class="logo">
-                        <div class="logo-icon">🌾</div>
-                        <span class="logo-text">Krishi</span>
-                    </div>
-                    <p class="footer-text">Smart agriculture powered by AI</p>
-                </div>
-                <div class="footer-section">
-                    <h4 class="footer-title">Quick Links</h4>
-                    <a href="#crop-prediction" class="footer-link">Crop Prediction</a>
-                    <a href="#disease-detection" class="footer-link">Disease Detection</a>
-                    <a href="#about" class="footer-link">About</a>
-                </div>
-                <div class="footer-section">
-                    <h4 class="footer-title">Resources</h4>
-                    <a href="#" class="footer-link">Documentation</a>
-                    <a href="#" class="footer-link">API Access</a>
-                    <a href="#" class="footer-link">Support</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Krishi. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+        function addBotMessage(text) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message message-bot';
+            messageDiv.innerHTML = `
+                <div class="avatar">🌾</div>
+                <div class="text">${text}</div>
+            `;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
 
-    <script src="script.js"></script>
+        function addUserMessage(text) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'chat-message message-user';
+            messageDiv.innerHTML = `<div class="text">${text}</div>`;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollHeight;
+        }
+
+        function sendQuickMessage(message) {
+            sendMessage(message);
+        }
+
+        function sendMessage(quickMsg) {
+            const input = document.getElementById('chatInput');
+            const message = quickMsg || input.value.trim();
+            
+            if (!message) return;
+            
+            addUserMessage(message);
+            if (!quickMsg) input.value = '';
+            
+            // Simple bot responses
+            setTimeout(() => {
+                const response = getBotResponse(message.toLowerCase());
+                addBotMessage(response);
+            }, 500);
+        }
+
+        function getBotResponse(message) {
+            if (message.includes('crop') || message.includes('predict')) {
+                return 'To predict crops, go to the Crop Recommendation section above! Enter your soil parameters (N, P, K, pH) and climate data. Our AI will recommend the best crop! 🌱';
+            } else if (message.includes('disease') || message.includes('sick')) {
+                return 'For disease detection, scroll to the Disease Detection section! Select your crop type and upload a leaf image. We\'ll identify diseases instantly! 🔬';
+            } else if (message.includes('npk')) {
+                return 'NPK stands for Nitrogen (N), Phosphorus (P), and Potassium (K) - the three essential nutrients for plant growth! You can get soil tests from agricultural labs. 🧪';
+            } else if (message.includes('rice')) {
+                return 'Rice grows best with: Temperature 20-35°C, high humidity (70-80%), lots of water. Watch for diseases like blast, blight, and smut! 🌾';
+            } else if (message.includes('wheat')) {
+                return 'Wheat needs: 15-25°C temperature, moderate rainfall (40-100cm), pH 6.0-7.5. Watch for rust diseases! 🌾';
+            } else if (message.includes('corn') || message.includes('maize')) {
+                return 'Corn thrives with: 20-30°C, good drainage, pH 5.8-7.0. Common diseases include rust and blight. 🌽';
+            } else if (message.includes('hello') || message.includes('hi')) {
+                return 'Hello! How can I help you with your farming needs today? Ask me about crops, diseases, or soil! 👋';
+            } else if (message.includes('thank')) {
+                return 'You\'re welcome! Happy farming! Feel free to ask anything else! 🌟';
+            } else {
+                return 'I can help with crop predictions, disease detection, soil nutrients (NPK), and farming tips! What would you like to know? 🌾';
+            }
+        }
+    </script>
 </body>
 </html>

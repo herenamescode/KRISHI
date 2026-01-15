@@ -1,85 +1,85 @@
 from flask import Flask, render_template, request, jsonify
 import pickle
 import numpy as np
+import pandas as pd
 import os
 from werkzeug.utils import secure_filename
 
 # Import your PyTorch disease model
 from crop_disease_model import load_model, predict
 
-app = Flask(__name__)
+app = Flask(__name__, 
+            template_folder='../frontend/templates',
+            static_folder='../frontend/static',
+            static_url_path='/static')
 
 # Configuration
 app.config['UPLOAD_FOLDER'] = 'uploads'
-app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 10MB max file size
+app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024  # 10MB max
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
-# Create upload folder if it doesn't exist
+# Create upload folder
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 # ========================================
-# LOAD MODELS AT STARTUP
+# LOAD MODELS
 # ========================================
 
 print("Loading models...")
+crop_model = None
+label_encoder = None
+disease_model = None
+idx_to_class = None
 
 try:
-    # Load crop prediction model (Random Forest)
     print("Loading crop prediction model...")
     with open('models/crop_rf.pkl', 'rb') as f:
         crop_model = pickle.load(f)
-    
     with open('models/label_encoder.pkl', 'rb') as f:
         label_encoder = pickle.load(f)
     print("✓ Crop prediction model loaded!")
-    
-    # Load disease detection model (PyTorch CNN)
+except Exception as e:
+    print(f"⚠️  Crop model error: {e}")
+
+try:
     print("Loading disease detection model...")
     disease_model, idx_to_class = load_model(
         model_path='models/crop_disease_cnn.pth',
         class_map_path='models/class_mapping.json'
     )
     print("✓ Disease detection model loaded!")
-    
-    print("\n🎉 All models loaded successfully!\n")
-    
 except Exception as e:
-    print(f"❌ Error loading models: {e}")
-    print("\nPlease make sure you have:")
-    print("  1. models/crop_rf.pkl")
-    print("  2. models/label_encoder.pkl")
-    print("  3. models/crop_disease_cnn.pth")
-    print("  4. models/class_mapping.json")
-    print("  5. crop_disease_model.py in the same directory as app.py\n")
+    print(f"⚠️  Disease model error: {e}")
+
+if crop_model or disease_model:
+    print("\n🎉 Ready to start!\n")
+else:
+    print("\n❌ No models loaded!\n")
 
 # ========================================
 # HELPER FUNCTIONS
 # ========================================
 
 def allowed_file(filename):
-    """Check if file extension is allowed"""
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def get_disease_recommendation(disease_name):
-    """Get treatment recommendation based on disease name"""
+def get_recommendation(disease_name):
     disease_lower = disease_name.lower()
     
     recommendations = {
-        'healthy': 'Great! Your plant appears healthy. Continue with regular care and monitoring.',
-        'rust': 'Apply fungicide treatment (e.g., mancozeb or copper-based). Remove infected leaves and improve air circulation around plants.',
-        'blight': 'Use copper-based fungicide. Remove and destroy affected leaves. Avoid overhead watering and ensure proper plant spacing.',
-        'spot': 'Apply appropriate fungicide. Remove affected leaves. Avoid water splash on leaves and improve drainage.',
-        'smut': 'Use resistant varieties in future plantings. Apply fungicide as preventive measure. Remove and destroy infected parts.',
-        'bacterial': 'Remove infected plants. Use copper-based bactericide. Avoid overhead irrigation and improve field sanitation.',
-        'brown': 'Apply appropriate fungicide. Improve field drainage and avoid water stress. Use balanced fertilization.'
+        'healthy': 'Great! Your plant appears healthy. Continue regular care.',
+        'rust': 'Apply fungicide. Remove infected leaves. Improve air circulation.',
+        'blight': 'Use copper-based fungicide. Remove affected leaves. Avoid overhead watering.',
+        'spot': 'Apply fungicide. Remove affected leaves. Improve drainage.',
+        'smut': 'Use resistant varieties. Apply fungicide preventively.',
+        'bacterial': 'Remove infected plants. Use copper bactericide. Improve sanitation.',
     }
     
-    # Check for keywords in disease name
-    for key, recommendation in recommendations.items():
+    for key, rec in recommendations.items():
         if key in disease_lower:
-            return recommendation
+            return rec
     
-    return 'Consult with a local agricultural expert for specific treatment recommendations. Remove affected parts and monitor closely.'
+    return 'Consult agricultural expert for treatment recommendations.'
 
 # ========================================
 # ROUTES
@@ -92,75 +92,73 @@ def index():
 
 @app.route('/predict_crop', methods=['POST'])
 def predict_crop():
-    """
-    Predict the best crop based on soil and climate parameters
+    """Crop prediction endpoint - FIXED VERSION"""
+    if not crop_model:
+        return jsonify({
+            'success': False,
+            'error': 'Crop prediction model not available'
+        }), 503
     
-    Expected JSON input:
-    {
-        "nitrogen": float,
-        "phosphorus": float,
-        "potassium": float,
-        "temperature": float,
-        "humidity": float,
-        "ph": float,
-        "rainfall": float
-    }
-    """
     try:
         data = request.get_json()
         
-        # Validate input
+        # Validate all fields are present
         required_fields = ['nitrogen', 'phosphorus', 'potassium', 'temperature', 
                           'humidity', 'ph', 'rainfall']
         
-        for field in required_fields:
-            if field not in data:
-                return jsonify({
-                    'success': False,
-                    'error': f'Missing required field: {field}'
-                }), 400
+        missing_fields = [field for field in required_fields if field not in data]
+        if missing_fields:
+            return jsonify({
+                'success': False,
+                'error': f'Missing required fields: {", ".join(missing_fields)}'
+            }), 400
         
-        # Extract features in the correct order
-        features = np.array([[
-            float(data['nitrogen']),
-            float(data['phosphorus']),
-            float(data['potassium']),
-            float(data['temperature']),
-            float(data['humidity']),
-            float(data['ph']),
-            float(data['rainfall'])
-        ]])
+        # Extract and convert features
+        try:
+            features_dict = {
+                'N': float(data['nitrogen']),
+                'P': float(data['phosphorus']),
+                'K': float(data['potassium']),
+                'temperature': float(data['temperature']),
+                'humidity': float(data['humidity']),
+                'ph': float(data['ph']),
+                'rainfall': float(data['rainfall'])
+            }
+        except (ValueError, TypeError) as e:
+            return jsonify({
+                'success': False,
+                'error': f'Invalid numeric value in input: {str(e)}'
+            }), 400
         
-        # Make prediction
-        prediction = crop_model.predict(features)
-        crop_name = label_encoder.inverse_transform(prediction)[0]
+        # Create DataFrame with feature names (fixes the warning)
+        features_df = pd.DataFrame([features_dict])
         
+        # Predict
+        prediction = crop_model.predict(features_df)
+        crop_name = prediction[0]
+
         return jsonify({
             'success': True,
             'crop': crop_name.title()
         })
         
-    except ValueError as e:
-        return jsonify({
-            'success': False,
-            'error': f'Invalid input values: {str(e)}'
-        }), 400
     except Exception as e:
+        print(f"Crop prediction error: {str(e)}")
         return jsonify({
             'success': False,
-            'error': f'Prediction error: {str(e)}'
+            'error': f'Prediction failed: {str(e)}'
         }), 500
 
 @app.route('/predict_disease', methods=['POST'])
 def predict_disease():
-    """
-    Predict plant disease from leaf image using PyTorch CNN
+    """Disease detection endpoint"""
+    if not disease_model:
+        return jsonify({
+            'success': False,
+            'error': 'Disease detection model not available'
+        }), 503
     
-    Expected form data:
-    - image: image file
-    """
     try:
-        # Check if image is in request
         if 'image' not in request.files:
             return jsonify({
                 'success': False,
@@ -169,7 +167,6 @@ def predict_disease():
         
         file = request.files['image']
         
-        # Validate file
         if file.filename == '':
             return jsonify({
                 'success': False,
@@ -179,27 +176,25 @@ def predict_disease():
         if not allowed_file(file.filename):
             return jsonify({
                 'success': False,
-                'error': 'Invalid file type. Please upload PNG, JPG, or JPEG'
+                'error': 'Invalid file type. Use PNG, JPG, or JPEG'
             }), 400
         
-        # Save file temporarily
+        # Save temporarily
         filename = secure_filename(file.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
         
-        # Make prediction using your PyTorch model
+        # Predict
         result = predict(filepath, disease_model, idx_to_class)
         
         disease_name = result['prediction']
         confidence = result['confidence']
         
-        # Clean up disease name for display
-        disease_display = disease_name.replace('_', ' ').replace('  ', ' - ')
+        # Clean display name
+        disease_display = disease_name.replace('_', ' ')
+        recommendation = get_recommendation(disease_name)
         
-        # Get recommendation
-        recommendation = get_disease_recommendation(disease_name)
-        
-        # Clean up - remove uploaded file
+        # Cleanup
         os.remove(filepath)
         
         return jsonify({
@@ -209,61 +204,52 @@ def predict_disease():
             'recommendation': recommendation
         })
         
-    except FileNotFoundError as e:
-        return jsonify({
-            'success': False,
-            'error': 'Image file not found'
-        }), 400
     except Exception as e:
-        # Clean up file if it exists
         if 'filepath' in locals() and os.path.exists(filepath):
             os.remove(filepath)
         
+        print(f"Disease prediction error: {str(e)}")
         return jsonify({
             'success': False,
-            'error': f'Prediction error: {str(e)}'
+            'error': f'Analysis failed: {str(e)}'
         }), 500
 
 @app.route('/health')
 def health():
-    """Health check endpoint"""
+    """Health check"""
     return jsonify({
         'status': 'healthy',
-        'message': 'Krishi API is running',
         'models': {
-            'crop_prediction': 'loaded',
-            'disease_detection': 'loaded'
+            'crop': 'loaded' if crop_model else 'unavailable',
+            'disease': 'loaded' if disease_model else 'unavailable'
         }
     })
 
-@app.errorhandler(413)
-def request_entity_too_large(error):
-    """Handle file too large error"""
-    return jsonify({
-        'success': False,
-        'error': 'File too large. Maximum size is 10MB'
-    }), 413
+# ========================================
+# ERROR HANDLERS
+# ========================================
+
+@app.errorhandler(404)
+def not_found(error):
+    return jsonify({'error': 'Not found'}), 404
 
 @app.errorhandler(500)
-def internal_server_error(error):
-    """Handle internal server error"""
-    return jsonify({
-        'success': False,
-        'error': 'Internal server error'
-    }), 500
+def internal_error(error):
+    return jsonify({'error': 'Internal server error'}), 500
 
 # ========================================
-# RUN APPLICATION
+# RUN APP
 # ========================================
 
 if __name__ == '__main__':
-    print("\n" + "="*79)
-    print("KRISHI (Knowledge-driven Real-time Intelligent System for Harvest & Irrigation)")
-    print("="*79)
-    print("\nStarting Flask server...")
-    print("Access the application at: http://localhost:5000")
-    print("Press Ctrl+C to stop the server\n")
+    print("\n" + "="*50)
+    print("🌾 Krishi - Smart Agriculture Platform")
+    print("="*50)
+    print("\n🚀 Starting Flask server...")
+    print("📍 Access: http://localhost:5001")
+    print("📁 Templates: ../frontend/templates")
+    print("📁 Static: ../frontend/static")
+    print("\n💡 Press Ctrl+C to stop\n")
     
-    # Run the app
-    # Set debug=True for development, debug=False for production
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # Run on port 5001
+    app.run(debug=True, host='0.0.0.0', port=5001)
