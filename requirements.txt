@@ -1,7 +1,7 @@
 flask
 gunicorn
-numpy
+numpy<1.27
 scikit-learn==1.6.1
-torchgit 
+torch
 torchvision
 pillow
