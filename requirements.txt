@@ -1,6 +1,7 @@
 flask
 gunicorn
 numpy<1.27
+pandas
 scikit-learn==1.6.1
 torch
 torchvision
